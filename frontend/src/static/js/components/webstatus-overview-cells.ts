@@ -172,6 +172,19 @@ export const renderBrowserQuality: CellRenderer = (
   if (didFeatureCrash(feature.wpt?.stable?.[browser!]?.metadata)) {
     percentage = renderFeatureCrash();
   }
+
+  // Add "Available since DD-MM-YYYY" as tooltip if browserImpl is "available"
+  if (browserImpl === 'available' && typeof feature.browser_implementations[browser!].date === 'string') {
+    const availableSince = feature.browser_implementations?.[browser!]
+      ?.date;
+    if (availableSince) {
+      percentage = html`
+        <sl-tooltip content="Available since ${availableSince}" placement="right-start">
+          ${percentage}
+        </sl-tooltip>`;
+    }
+  }
+
   const iconName = BROWSER_IMPL_ICONS[browserImpl];
   return html`
     <div class="browser-impl-${browserImpl}">
